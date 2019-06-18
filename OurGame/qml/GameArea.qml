@@ -11,6 +11,9 @@ Item {
   property int rows: Math.floor(height / blockSize)
   property int columns: Math.floor(width / blockSize)
 
+  property int maxTypes
+  property int clicks
+
   // array for handling game field,它将游戏字段（网格）表示为块实体数组。
   property var field: []
 
@@ -25,6 +28,8 @@ Item {
   // fill game field with blocks,清空网格并用新块填充它。
   function initializeField() {
     // clear field
+    gameArea.clicks=0
+    gameArea.maxTypes=3
     clearField()
 
     // fill field
@@ -56,7 +61,7 @@ Item {
       x: column * blockSize,
       y: row * blockSize,
 
-      type: Math.floor(Math.random() * 5), // random type
+      type: Math.floor(Math.random() * gameArea.maxTypes), // random type
       row: row,
       column: column
     }
@@ -75,7 +80,8 @@ Item {
   // handle user clicks,将处理我们创建的块中的所有点击信号。参数告诉我们已单击的块的位置和类型。我们通过entity.clicked.connect（handleClick）命令将动态创建的块的信号与此函数连接起来。
   //row,column指定搜索的起始点。type设置搜索所需的块类型。
   function handleClick(row, column, type) {
-    // ...
+      if(!isFieldReadyForNewBlockRemoval())
+          return
       var fieldCopy = field.slice() //使用JavaScript函数slice（），这是复制整个数组的最快方法之一.必须是当前游戏领域的副本。该函数将更改给定字段以标记已计数的块。每当在邻域中找到所需类型的块时，它将从场中移除以避免再次检查它。
       var blockCount = getNumberOfConnectedBlocks(fieldCopy,row,column,type)
       if(blockCount>=3) {
@@ -84,7 +90,23 @@ Item {
 
           var score = blockCount * (blockCount + 1) / 2
           scene.score += score
+
+          if(isGameOver())
+              gameOver()
+
+          gameArea.clicks++
+          if((gameArea.maxTypes<5)&&(gameArea.clicks%10==0))
+              gameArea.maxTypes++
       }
+  }
+
+  function isFieldReadyForNewBlockRemoval() {
+      for(var col=0;col<columns;col++) {
+          var block = field[index(0,col)]
+          if(block===null ||block.y<0)
+              return false
+      }
+      return true
   }
 
 
@@ -122,12 +144,14 @@ Item {
         var block = gameArea.field[i]
         if(block !== null) {
           gameArea.field[i] = null
-          entityManager.removeEntityById(block.entityId)
+//          entityManager.removeEntityById(block.entityId)
+            block.remove()
         }
       }
     }
   }
 
+  //我们将从底部到顶部填充游戏区域的每一列，从左侧的列开始。每当我们在列中遇到空白点时，我们会搜索上面的下一个块并将其向下移动。
   function moveBlocksToButtom () {
       for(var col=0;col<columns;col++) {
           for(var row=rows-1;row>=0;row--) {
@@ -144,19 +168,54 @@ Item {
                           break
                       }
                   }
-                  if(moveBlock === null) {
-                      for(var newRow = row; newRow >= 0; newRow--) {
-                           var newBlock = createBlock(newRow, col)
-                           gameArea.field[index(newRow, col)] = newBlock
-                           newBlock.row = newRow
-                           newBlock.y = newRow * gameArea.blockSize
-                       }
+//                  if(moveBlock === null) {
+//                      for(var newRow = row; newRow >= 0; newRow--) {
+//                           var newBlock = createBlock(newRow, col)
+//                           gameArea.field[index(newRow, col)] = newBlock
+//                           newBlock.row = newRow
+//                           newBlock.y = newRow * gameArea.blockSize
+//                       }
+//                       break
+//                  }
 
-                       // column already filled up, no need to check higher rows again
-                       break
+                  if(moveBlock===null) {
+                    var distance = row+1
+
+                      for(var newRow=row;newRow>=0;newRow--) {
+                          var newBlock = createBlock(newRow-distance,col)
+                          gameArea.field[index(newRow,col)]=newBlock //创建新块时，我们现在通过将newRow-distance设置为createBlock-call处的初始网格位置，将它们放置在游戏区域之外。
+                          newBlock.row=newRow
+                          newBlock.fallDown(distance) //将块移动到底部或创建新块时，我们只需使用fallDown函数而不是更改块的y位置
+                      }
+
+                      break
                   }
               }
           }
       }
+  }
+
+  function isGameOver() {
+      var gameOver = true
+      var fieldCopy = field.slice()
+
+      // search for connected blocks in field
+      for(var row = 0; row < rows; row++) {
+            for(var col = 0; col < columns; col++) {
+
+              // test all blocks
+                var block = fieldCopy[index(row, col)]
+                if(block !== null) {
+                    var blockCount = getNumberOfConnectedBlocks(fieldCopy, row, col, block.type)
+
+                    if(blockCount >= 3) {
+                        gameOver = false
+                        break
+                    }
+                }
+            }
+        }
+
+        return gameOver
   }
 }

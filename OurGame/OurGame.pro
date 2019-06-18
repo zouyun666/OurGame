@@ -61,4 +61,5 @@ macx {
 
 DISTFILES += \
     qml/Block.qml \
-    qml/GameArea.qml
+    qml/GameArea.qml \
+    qml/GameOverWindow.qml

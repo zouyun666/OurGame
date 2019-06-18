@@ -50,9 +50,20 @@ GameWindow {
            anchors.horizontalCenter: scene.horizontalCenter
            blockSize: 30
            y:20
+           onGameOver: gameOverWindow.show()
        }
 
+       GameOverWindow {
+           id: gameOverWindow
+           y:90
+           opacity: 0
+           anchors.horizontalCenter: scene.horizontalCenter
+           onNewGameClicked: scene.startGame()
+       }
+
+
        function startGame() { //onSplashScreenFinished：scene.startGame（）行将在Felgo启动画面消失后触发第一次初始化。
+           gameOverWindow.hide()
            gameArea.initializeField()
            scene.score = 0
        }
