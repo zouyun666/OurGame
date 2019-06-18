@@ -95,7 +95,7 @@ Item {
               gameOver()
 
           gameArea.clicks++
-          if((gameArea.maxTypes<5)&&(gameArea.clicks%10==0))
+          if((gameArea.maxTypes<8)&&(gameArea.clicks%5==0))
               gameArea.maxTypes++
       }
   }

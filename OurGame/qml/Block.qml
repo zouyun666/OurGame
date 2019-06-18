@@ -26,8 +26,14 @@ EntityBase {
           return "../assets/Orange.png"
         else if (type == 3)
           return "../assets/Pear.png"
-        else
+        else if (type == 4)
           return "../assets/BlueBerry.png"
+        else if (type == 5)
+          return "../assets/Coconut.png"
+        else if (type == 6)
+          return "../assets/Lemon.png"
+        else
+          return "../assets/WaterMelon.png"
       }
     }
     MouseArea {
@@ -45,7 +51,7 @@ EntityBase {
         to:0
 
         onStopped: {
-            EntityManager.removeEntityById(block.entityId)
+            entityManager.removeEntityById(block.entityId)
         }
     }
 
