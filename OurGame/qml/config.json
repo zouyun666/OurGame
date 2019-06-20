@@ -1,8 +1,9 @@
 {
-    "title": "OurGame",
-    "identifier": "com.yourcompany.wizardEVP.OurGame",
-    "orientation": "landscape",
-    "versioncode": 1,
-    "versionname": "1.0.0",
+    "title": "Juicy Squash",
+    "identifier": "net.vplay.demos.JuicySquash",
+    "orientation": "portrait",
+    "versioncode": 11,
+    "versionname": "1.1",
     "stage": "test"
 }
+

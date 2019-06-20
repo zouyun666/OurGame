@@ -1,71 +1,114 @@
 import Felgo 3.0
 import QtQuick 2.0
+import "scenes"
 
 GameWindow {
-    id: gameWindow
+  id: gameWindow
 
-    activeScene: scene
+  screenWidth: 640
+  screenHeight: 960
 
-    screenWidth: 640
-    screenHeight: 960
+  // custom font loading of ttf fonts
+  FontLoader {
+    id: gameFont
+    source: "../assets/fonts/akaDylan Plain.ttf"
+  }
 
-    onSplashScreenFinished: scene.startGame()
+  // loading screen,加载屏幕
+  Rectangle {
+    id: loadScreen
+    width: gameWindow.width
+    height: gameWindow.height
+    color: "#FFB6C1"
+    z: 1  //默认值为零，即后面的Item在前面的Item之上，若z值较大，则该Item将绘制在上面
 
-    //我们还在createBlock-function中添加我们正在使用的EntityManager组件，并将游戏区域指定为所有块的entityContainer。
-    EntityManager {
-        id:entityManager
-        entityContainer: gameArea   //将游戏区域指定为所有块的entityContainer
+    opacity: 0
+    enabled: opacity == 1 ? true : false
+    visible: opacity > 0 ? true : false
+
+    // signal when load screen is fully visible
+    signal fullyVisible()
+
+    // background and text
+    Text {
+      // set font
+      font.family: gameFont.name
+      font.pixelSize: gameWindow.width / 640 * 24
+      color: "red"
+      text: "Loading ..."
+      anchors.centerIn: parent
     }
 
-    FontLoader {
-        id:gameFont
-        source: "../assets/fonts/akaDylan Plain.ttf"
+    // animate loading screen
+    Behavior on opacity {
+      PropertyAnimation {
+        duration: 3000
+        onRunningChanged: {
+          if(!running && opacity == 1) //running此属性保存动画当前是否正在运行。可以将running属性设置为以声明方式控制动画是否正在运行。 以下示例将在按下MouseArea时为矩形设置动画。
+            loadScreen.fullyVisible()
+        }
+      }
     }
+  }
 
-    Scene {
-       id:scene
-       width: 320
-       height: 480
+  // add spashscreen scene (first scene to show)，启动画面场景
+  SplashScreenScene {
+    id: splashScene
+    onSplashScreenFinished: gameWindow.state = "game" // show game screen after splash screen，启动画面后显示游戏画面
+  }
 
-       property int score
+  // use loader to load game-scene when necessary，必要时使用loader来加载游戏场景
+  Loader {
+    id: gameSceneLoader
+    onLoaded: loadScreen.opacity = 0
+  }
 
-       BackgroundImage {
-           source: "../assets/JuicyBackground.png"
-           anchors.centerIn: scene.gameWindowAnchorItem
-       }
+  // set start state
+  state: "splash"
 
-       Text {
-           font.family: gameFont.name
-           font.pixelSize: 12
-           color: "red"
-           text: scene.score
+  states: [
+    State {
+      name: "splash"
+      PropertyChanges {target: splashScene; opacity: 1}
+      PropertyChanges {target: gameWindow; activeScene: splashScene}
+    },
+    State {
+      name: "game"
+      StateChangeScript {
+        script: {
+          showGameScene()
+        }
+      }
+    }
+  ]
 
-           anchors.horizontalCenter: parent.horizontalCenter
-           y:446
-       }
+  // show game scene
+  function showGameScene() {
+    // if game scene not loaded -> load first
+    if(gameSceneLoader.item === null) {
+      gameSceneLoader.loaded.connect(showGameScene)
+      loadGameScene()
+      return
+    }
+    //此时肯定会加载场景
+    //显示游戏场景
+    gameWindow.activeScene = gameSceneLoader.item
+    gameSceneLoader.item.opacity = 1
+  }
 
-       // startGame-function重置点和游戏区域。 每次必须开始新游戏时都会调用它。
-       GameArea {
-           id:gameArea
-           anchors.horizontalCenter: scene.horizontalCenter
-           blockSize: 30
-           y:20
-           onGameOver: gameOverWindow.show()
-       }
+//显示加载屏幕并开始加载游戏场景
+  function loadGameScene() {
+    loadScreen.opacity = 1
+    loadScreen.fullyVisible.connect(fetchAndInitializeGameScene)
+  }
 
-       GameOverWindow {
-           id: gameOverWindow
-           y:90
-           opacity: 0
-           anchors.horizontalCenter: scene.horizontalCenter
-           onNewGameClicked: scene.startGame()
-       }
+//从qml中获取游戏场景并连接信号
+  function fetchAndInitializeGameScene() {
+    gameSceneLoader.source = "scenes/GameScene.qml"
+//    gameSceneLoader.item.highscoreClicked.connect(onHighscoreClicked)
+//    gameSceneLoader.item.reportScore.connect(onReportScore)
 
+    loadScreen.fullyVisible.disconnect(fetchAndInitializeGameScene) //断开连接
+  }
 
-       function startGame() { //onSplashScreenFinished：scene.startGame（）行将在Felgo启动画面消失后触发第一次初始化。
-           gameOverWindow.hide()
-           gameArea.initializeField()
-           scene.score = 0
-       }
-   }
 }

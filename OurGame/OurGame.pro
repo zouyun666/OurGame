@@ -52,6 +52,12 @@ ios {
 }
 
 # set application icons for win and macx
+
+ios {
+  QMAKE_TARGET_BUNDLE_PREFIX = "net.vplay.demos"
+  TARGET = JuicySquash
+}
+
 win32 {
     RC_FILE += win/app_icon.rc
 }
@@ -59,7 +65,6 @@ macx {
     ICON = macx/app_icon.icns
 }
 
+
 DISTFILES += \
-    qml/Block.qml \
-    qml/GameArea.qml \
-    qml/GameOverWindow.qml
+    qml/GameArea.qml
