@@ -67,4 +67,5 @@ macx {
 
 
 DISTFILES += \
-    qml/GameArea.qml
+    qml/GameArea.qml \
+    qml/ui/DemoMenuWindow.qml

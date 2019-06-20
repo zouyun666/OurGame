@@ -14,7 +14,8 @@ Item {
   enabled: opacity == 1
 
   // signal when buttons are clicked
-  signal startClicked()
+//  signal startClicked()
+  signal startMenu()
   signal highscoreClicked()
   signal creditsClicked()
 //  signal vplayClicked()
@@ -41,7 +42,7 @@ Item {
     // signal click event
     MouseArea {
       anchors.fill: parent
-      onClicked: startClicked()
+      onClicked: startMenu()
     }
 
     // 此动画序列无限地更改红色和橙色之间的文本颜色

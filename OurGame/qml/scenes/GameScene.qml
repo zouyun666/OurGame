@@ -212,11 +212,19 @@ SceneBase {
     y: 25
     opacity: 1
     anchors.horizontalCenter: scene.horizontalCenter
-    onStartClicked: scene.startGame()
+    onStartMenu: scene.startJuicy()
     onHighscoreClicked: scene.highscoreClicked()
     onCreditsClicked: {
       titleWindow.hide(); creditsWindow.show()
     }
+  }
+
+  DemoMenuWindow {
+      id:demoMenuWindow
+      opacity: 0
+      anchors.fill: parent
+      onStartClicked: scene.startGame()
+      onStartClicked2: scene.startGame2()
   }
 
 //配置gameover窗口
@@ -238,6 +246,8 @@ SceneBase {
     onBackClicked: { openTitleWindow() }
 //    }
   }
+
+
 
   //配置主页按钮
   Image {
@@ -394,6 +404,22 @@ SceneBase {
     titleWindow.hide()
     gameOverWindow.hide()
     creditsWindow.hide()
+    demoMenuWindow.hide()
+
+    // start loading animation
+    whiteScreen.startLoading()
+
+    // delay start of initialization
+    initTimer.start()
+  }
+
+  // initialize game
+  function startGame2() {
+    // hide windows
+    titleWindow.hide()
+//    gameOverWindow.hide()
+    creditsWindow.hide()
+    demoMenuWindow.hide()
 
     // start loading animation
     whiteScreen.startLoading()
@@ -422,5 +448,18 @@ SceneBase {
         gameTimer.stop()
       nativeUtils.displayMessageBox("Abort current game?", "", 2)
     }
+  }
+
+  function startJuicy()
+  {
+      titleWindow.hide()
+      gameOverWindow.hide()
+      creditsWindow.hide()
+      demoMenuWindow.show()
+      // start loading animation
+//      whiteScreen.startLoading()
+
+      // delay start of initialization
+//      initTimer.start()
   }
 }

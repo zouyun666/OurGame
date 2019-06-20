@@ -359,7 +359,7 @@ Item {
               }
 
               fieldCopy[index(row, col)] = null
-              return nrLeft + nrRight - 1 + nrLeft + nrRight - 1
+              return nrLeft + nrRight - 1
   }
 
   // 删除以前标记的块
