@@ -14,7 +14,7 @@ Item {
   enabled: opacity == 1
 
   // signal when new game button is clicked
-  signal newGameClicked()
+  signal demoMenuClicked()
   signal backClicked()
 
   Image {
@@ -51,7 +51,7 @@ Item {
     // signal click event
     MouseArea {
       anchors.fill: parent
-      onClicked: newGameClicked()
+      onClicked: demoMenuClicked()
     }
 
     // this animation sequence changes the color of text between red and orange infinitely

@@ -130,6 +130,25 @@ SceneBase {
     opacity: filledGrid.opacity == 1 ? 0 : 1
   }
 
+  GameArea2 {
+      id:gameArea2
+      anchors.horizontalCenter: scene.horizontalCenter
+      anchors.verticalCenter: grid.verticalCenter
+      blockSize: 30
+
+      onGameOver: {currentGame2Ended()}
+
+      onInitFinished: {
+          whiteScreen.stopLoading()
+          scene.score = 0
+          filledGrid.opacity = 0
+          scene.juicyMeterPercentage = 0
+          scene.remainingTime = 120
+      }
+      // 在标题画面上隐藏游戏区域
+      opacity: filledGrid.opacity == 1 ? 0 : 1
+  }
+
   // show logo
   Image {
     id: juicyLogo
@@ -233,7 +252,7 @@ SceneBase {
     y: 90
     opacity: 0//默认情况下，窗口是隐藏的
     anchors.horizontalCenter: scene.horizontalCenter
-    onNewGameClicked: scene.startGame()
+    onDemoMenuClicked: backdemoMenu()
     onBackClicked: { openTitleWindow() }
   }
 
@@ -376,6 +395,14 @@ SceneBase {
     }
   }
 
+  Timer {
+      id: initTimer2
+      interval: 400
+      onTriggered: {
+          gameArea2.initializeField()
+      }
+  }
+
   // opens title window
   function openTitleWindow() {
     // show background
@@ -398,6 +425,11 @@ SceneBase {
     scene.reportScore(scene.score)
   }
 
+  function currentGame2Ended() {
+      gameOverWindow.show()
+      scene.reportScore(scene.score)
+  }
+
   // initialize game
   function startGame() {
     // hide windows
@@ -417,7 +449,7 @@ SceneBase {
   function startGame2() {
     // hide windows
     titleWindow.hide()
-//    gameOverWindow.hide()
+    gameOverWindow.hide()
     creditsWindow.hide()
     demoMenuWindow.hide()
 
@@ -425,7 +457,7 @@ SceneBase {
     whiteScreen.startLoading()
 
     // delay start of initialization
-    initTimer.start()
+    initTimer2.start()
   }
 
   // 按下后退按钮
@@ -461,5 +493,11 @@ SceneBase {
 
       // delay start of initialization
 //      initTimer.start()
+  }
+
+  function backdemoMenu()
+  {
+      gameOverWindow.hide()
+      demoMenuWindow.show()
   }
 }
