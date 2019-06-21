@@ -2,7 +2,7 @@ import Felgo 3.0
 import QtQuick 2.0
 
 Item {
-  id: gameArea
+  id: gameArea2
 
   width: blockSize * 8
   height: blockSize * 12
@@ -17,10 +17,21 @@ Item {
   // array for handling game field,它将游戏字段（网格）表示为块实体数组。
   property var field: []
 
-  signal initFinished()
+  // 隐藏和禁用不透明度
+  visible: gameArea2.opacity > 0
+  enabled: gameArea2.opacity == 1
+
+
+//  property bool fieldLocked
+
+  signal initFinished2()
   // game over signal,传递游戏结束的信息。
   signal gameOver()
 
+
+//  onFieldLockedChanged: {
+//        gameOver()
+//  }
   // calculate field index,返回特定网格位置的数组索引。我们可以使用此函数方便地访问字段数组中给定网格位置（行和列）的块。
   function index(row, column) {
     return row * columns + column
@@ -29,31 +40,31 @@ Item {
   // fill game field with blocks,清空网格并用新块填充它。
   function initializeField() {
     // clear field
-    gameArea.clicks=0
-    gameArea.maxTypes=3
+    gameArea2.clicks=0
+    gameArea2.maxTypes=3
     clearField()
 
     // fill field
     for(var i = 0; i < rows; i++) {
       for(var j = 0; j < columns; j++) {
-        gameArea.field[index(i, j)] = createBlock(i, j)
+        gameArea2.field[index(i, j)] = createBlock(i, j)
       }
     }
 
     // 信号初始化完成
-    initFinished()
+    initFinished2()
   }
 
   // clear game field,正确删除游戏区域中的所有块实体并清除字段数组。
   function clearField() {
     // remove entities
-    for(var i = 0; i < gameArea.field.length; i++) {
-      var block = gameArea.field[i]
+    for(var i = 0; i < gameArea2.field.length; i++) {
+      var block = gameArea2.field[i]
       if(block !== null)  {
-        entityManager.removeEntityById(block.entityId)
+        entityManager2.removeEntityById(block.entityId)
       }
     }
-    gameArea.field = []
+    gameArea2.field = []
   }
 
   // create a new block at specific position,在特定网格位置向游戏添加新的随机块。
@@ -65,17 +76,17 @@ Item {
       x: column * blockSize,
       y: row * blockSize,
 
-      type: Math.floor(Math.random() * gameArea.maxTypes), // random type
+      type: Math.floor(Math.random() * gameArea2.maxTypes), // random type
       row: row,
       column: column
     }
 
     // add block to game area
-    var id = entityManager.createEntityFromUrlWithProperties(
+    var id = entityManager2.createEntityFromUrlWithProperties(
           Qt.resolvedUrl("Block2.qml"), entityProperties)
 
     // link click signal from block to handler function
-    var entity = entityManager.getEntityById(id)
+    var entity = entityManager2.getEntityById(id)
     entity.clicked.connect(handleClick)
 
     return entity
@@ -98,9 +109,9 @@ Item {
           if(isGameOver())
               gameOver()
 
-          gameArea.clicks++
-          if((gameArea.maxTypes<8)&&(gameArea.clicks%10==0))
-              gameArea.maxTypes++
+          gameArea2.clicks++
+          if((gameArea2.maxTypes<8)&&(gameArea2.clicks%10==0))
+              gameArea2.maxTypes++
       }
   }
 
@@ -145,9 +156,9 @@ Item {
     for(var i = 0; i < fieldCopy.length; i++) {
       if(fieldCopy[i] === null) {
         // remove block from field
-        var block = gameArea.field[i]
+        var block = gameArea2.field[i]
         if(block !== null) {
-          gameArea.field[i] = null
+          gameArea2.field[i] = null
 //          entityManager.removeEntityById(block.entityId)
             block.remove()
         }
@@ -159,16 +170,16 @@ Item {
   function moveBlocksToButtom () {
       for(var col=0;col<columns;col++) {
           for(var row=rows-1;row>=0;row--) {
-              if(gameArea.field[index(row,col)]===null) {
+              if(gameArea2.field[index(row,col)]===null) {
                   var moveBlock = null
                   for (var moveRow = row-1;moveRow>=0;moveRow--) {
-                      moveBlock = gameArea.field[index(moveRow,col)]
+                      moveBlock = gameArea2.field[index(moveRow,col)]
 
                       if(moveBlock !== null) {
-                          gameArea.field[index(moveRow,col)] = null
-                          gameArea.field[index(row, col)] = moveBlock
+                          gameArea2.field[index(moveRow,col)] = null
+                          gameArea2.field[index(row, col)] = moveBlock
                           moveBlock.row = row
-                          moveBlock.y = row * gameArea.blockSize
+                          moveBlock.y = row * gameArea2.blockSize
                           break
                       }
                   }
@@ -187,7 +198,7 @@ Item {
 
                       for(var newRow=row;newRow>=0;newRow--) {
                           var newBlock = createBlock(newRow-distance,col)
-                          gameArea.field[index(newRow,col)]=newBlock //创建新块时，我们现在通过将newRow-distance设置为createBlock-call处的初始网格位置，将它们放置在游戏区域之外。
+                          gameArea2.field[index(newRow,col)]=newBlock //创建新块时，我们现在通过将newRow-distance设置为createBlock-call处的初始网格位置，将它们放置在游戏区域之外。
                           newBlock.row=newRow
                           newBlock.fallDown(distance) //将块移动到底部或创建新块时，我们只需使用fallDown函数而不是更改块的y位置
                       }

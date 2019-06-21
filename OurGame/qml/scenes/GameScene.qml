@@ -33,7 +33,7 @@ SceneBase {
   signal reportScore(int score)
 
   //对本机后退按钮做出反应
-  onBackButtonPressed: backPressed()
+//  onBackButtonPressed: backPressed()
 
   // 添加实体管理器
   EntityManager {
@@ -48,6 +48,15 @@ SceneBase {
     //注意：重要的是此列表中添加的组件永远不会被删除，否则将无法再访问该组件。 因此，请确保不要销毁放置组件定义的qml文件！
     dynamicCreationEntityList: [
       Qt.resolvedUrl("../game/Block.qml")
+    ]
+  }
+
+  EntityManager {
+    id: entityManager2
+    entityContainer: gameArea2
+    poolingEnabled: true
+    dynamicCreationEntityList: [
+        Qt.resolvedUrl("../game/Block2.qml")
     ]
   }
 
@@ -138,12 +147,12 @@ SceneBase {
 
       onGameOver: {currentGame2Ended()}
 
-      onInitFinished: {
+      onInitFinished2: {
           whiteScreen.stopLoading()
           scene.score = 0
-          filledGrid.opacity = 0
           scene.juicyMeterPercentage = 0
           scene.remainingTime = 120
+          filledGrid.opacity = 0
       }
       // 在标题画面上隐藏游戏区域
       opacity: filledGrid.opacity == 1 ? 0 : 1
@@ -234,7 +243,8 @@ SceneBase {
     onStartMenu: scene.startJuicy()
     onHighscoreClicked: scene.highscoreClicked()
     onCreditsClicked: {
-      titleWindow.hide(); creditsWindow.show()
+      titleWindow.hide();
+      creditsWindow.show()
     }
   }
 
@@ -242,8 +252,16 @@ SceneBase {
       id:demoMenuWindow
       opacity: 0
       anchors.fill: parent
-      onStartClicked: scene.startGame()
-      onStartClicked2: scene.startGame2()
+      onStartClicked: {
+          gameArea2.opacity=0
+          gameArea.opacity=1
+          scene.startGame()
+      }
+      onStartClicked2: {
+          gameArea.opacity=0
+          gameArea2.opacity=1
+          scene.startGame2()
+      }
   }
 
 //配置gameover窗口
@@ -276,7 +294,8 @@ SceneBase {
 
     MouseArea {
       anchors.fill: parent
-      onClicked: backButtonPressed()  //未实现？？？？
+//      onClicked:  openTitleWindow()  //未实现？？？？
+      onClicked:  backPressed()
     }
 
     x: 5
@@ -314,7 +333,7 @@ SceneBase {
         property: "opacity"
         from: 1
         to: 0
-        duration: 700
+        duration: 300
       }
     }
 
@@ -331,8 +350,8 @@ SceneBase {
         target: whiteScreen
         property: "opacity"
         from: 1
-        to: 0.8
-        duration: 1000
+        to: 0
+        duration: 500
       }
     }
 
@@ -391,7 +410,7 @@ SceneBase {
     interval: 400
     onTriggered: {
       // initialize
-      gameArea.initializeField()
+        gameArea.initializeField()
     }
   }
 
@@ -413,6 +432,7 @@ SceneBase {
     // show title window
     creditsWindow.hide()
     gameOverWindow.hide()
+    demoMenuWindow.hide()
     titleWindow.show()
   }
 
@@ -433,6 +453,9 @@ SceneBase {
   // initialize game
   function startGame() {
     // hide windows
+
+//    gameArea2.enabled =false
+//    initTimer2.stop()
     titleWindow.hide()
     gameOverWindow.hide()
     creditsWindow.hide()
@@ -440,46 +463,51 @@ SceneBase {
 
     // start loading animation
     whiteScreen.startLoading()
-
+    scene.juicyMeterPercentage = 0
+    gameArea.opacity=1
     // delay start of initialization
     initTimer.start()
+
   }
 
   // initialize game
   function startGame2() {
     // hide windows
+
+//    gameArea.enabled=false
+//    initTimer.stop()
     titleWindow.hide()
     gameOverWindow.hide()
     creditsWindow.hide()
     demoMenuWindow.hide()
 
+
     // start loading animation
     whiteScreen.startLoading()
-
+    gameArea2.opacity=1
     // delay start of initialization
     initTimer2.start()
   }
 
   // 按下后退按钮
   function backPressed() {
-    if(titleWindow.visible) {
-      // player is in menu, quit game??
-      nativeUtils.displayMessageBox("Really quit the game?", "", 2)
-    }
-    else if(creditsWindow.visible)  {
-      // not in game, directly open title window
-      openTitleWindow()
-    }
-    else if(gameOverWindow.visible) {
-      // go back to title
-      openTitleWindow()
-    }
-    else {
-      // in game, ask player before switching
-      if(gameTimer.running)
-        gameTimer.stop()
-      nativeUtils.displayMessageBox("Abort current game?", "", 2)
-    }
+//      initTimer.stop()
+//      initTimer2.stop()
+//      gameTimer.stop()
+
+      creditsWindow.hide()
+      gameOverWindow.hide()
+      demoMenuWindow.hide()
+
+      gameArea.opacity=0
+      gameArea2.opacity=0
+      scene.juicyMeterPercentage = 0
+
+      filledGrid.opacity =1
+      juicyLogo.opacity=1
+      titleWindow.opacity=1
+
+//      titleWindow.show()
   }
 
   function startJuicy()
@@ -488,11 +516,6 @@ SceneBase {
       gameOverWindow.hide()
       creditsWindow.hide()
       demoMenuWindow.show()
-      // start loading animation
-//      whiteScreen.startLoading()
-
-      // delay start of initialization
-//      initTimer.start()
   }
 
   function backdemoMenu()

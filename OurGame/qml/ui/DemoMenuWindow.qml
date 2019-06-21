@@ -34,13 +34,13 @@ Item {
     }
     Image {
         source: "../../assets/img/ButtonBG.png"
-        width: 80
-        height: 80
-        x:80
-        y:130
+        width: 70
+        height: 70
+        x:60
+        y:70
         Text {
             font.family: gameFont.name
-            font.pixelSize: 15
+            font.pixelSize: 13
             color: "red"
             text: "Demo 1"
             anchors.centerIn: parent
@@ -54,13 +54,13 @@ Item {
 
     Image {
         source: "../../assets/img/ButtonBG.png"
-        width: 80
-        height:80
-        x:160
-        y:130
+        width: 70
+        height:70
+        x:190
+        y:70
         Text {
             font.family: gameFont.name
-            font.pixelSize: 15
+            font.pixelSize: 13
             color: "red"
             text: "Demo 2"
             anchors.centerIn: parent

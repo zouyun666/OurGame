@@ -90,6 +90,7 @@ Item {
 
   // shows the window
   function show() {
+//      titleWindow.enabled=true
     titleWindow.opacity = 1
   }
 
