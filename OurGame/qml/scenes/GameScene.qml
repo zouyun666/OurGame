@@ -60,6 +60,15 @@ SceneBase {
     ]
   }
 
+  EntityManager {
+    id: entityManager3
+    entityContainer: gameArea3
+    poolingEnabled: true
+    dynamicCreationEntityList: [
+        Qt.resolvedUrl("../game/Block3.qml")
+    ]
+  }
+
   // background image
   BackgroundImage {
     source: "../../assets/img/JuicyBackground.png"
@@ -148,6 +157,25 @@ SceneBase {
       onGameOver: {currentGame2Ended()}
 
       onInitFinished2: {
+          whiteScreen.stopLoading()
+          scene.score = 0
+          scene.juicyMeterPercentage = 0
+          scene.remainingTime = 120
+          filledGrid.opacity = 0
+      }
+      // 在标题画面上隐藏游戏区域
+      opacity: filledGrid.opacity == 1 ? 0 : 1
+  }
+
+  GameArea3 {
+      id:gameArea3
+      anchors.horizontalCenter: scene.horizontalCenter
+      anchors.verticalCenter: grid.verticalCenter
+      blockSize: 30
+
+      onGameOver: {currentGame3Ended()}
+
+      onInitFinished3: {
           whiteScreen.stopLoading()
           scene.score = 0
           scene.juicyMeterPercentage = 0
@@ -254,13 +282,21 @@ SceneBase {
       anchors.fill: parent
       onStartClicked: {
           gameArea2.opacity=0
+          gameArea3.opacity=0
           gameArea.opacity=1
           scene.startGame()
       }
       onStartClicked2: {
           gameArea.opacity=0
+          gameArea3.opacity=0
           gameArea2.opacity=1
           scene.startGame2()
+      }
+      onStartClicked3: {
+          gameArea.opacity=0
+          gameArea2.opacity=0
+          gameArea3.opacity=1
+          scene.startGame3()
       }
   }
 
@@ -422,6 +458,14 @@ SceneBase {
       }
   }
 
+  Timer {
+      id: initTimer3
+      interval: 400
+      onTriggered: {
+          gameArea3.initializeField()
+      }
+  }
+
   // opens title window
   function openTitleWindow() {
     // show background
@@ -446,6 +490,11 @@ SceneBase {
   }
 
   function currentGame2Ended() {
+      gameOverWindow.show()
+      scene.reportScore(scene.score)
+  }
+
+  function currentGame3Ended() {
       gameOverWindow.show()
       scene.reportScore(scene.score)
   }
@@ -489,6 +538,24 @@ SceneBase {
     initTimer2.start()
   }
 
+  function startGame3() {
+    // hide windows
+
+//    gameArea.enabled=false
+//    initTimer.stop()
+    titleWindow.hide()
+    gameOverWindow.hide()
+    creditsWindow.hide()
+    demoMenuWindow.hide()
+
+
+    // start loading animation
+    whiteScreen.startLoading()
+    gameArea3.opacity=1
+    // delay start of initialization
+    initTimer3.start()
+  }
+
   // 按下后退按钮
   function backPressed() {
 //      initTimer.stop()
@@ -501,6 +568,7 @@ SceneBase {
 
       gameArea.opacity=0
       gameArea2.opacity=0
+      gameArea3.opacity=0
       scene.juicyMeterPercentage = 0
 
       filledGrid.opacity =1

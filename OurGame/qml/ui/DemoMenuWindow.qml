@@ -10,6 +10,7 @@ Item {
 
     signal startClicked()
     signal startClicked2()
+    signal startClicked3()
     Image {
         source: "../../assets/img/JuicyBackground.png"
         anchors.fill: parent
@@ -36,7 +37,7 @@ Item {
         source: "../../assets/img/ButtonBG.png"
         width: 70
         height: 70
-        x:60
+        x:25
         y:70
         Text {
             font.family: gameFont.name
@@ -56,7 +57,7 @@ Item {
         source: "../../assets/img/ButtonBG.png"
         width: 70
         height:70
-        x:190
+        x:125
         y:70
         Text {
             font.family: gameFont.name
@@ -68,6 +69,25 @@ Item {
         MouseArea {
             anchors.fill: parent
             onClicked: startClicked2()
+        }
+    }
+
+    Image {
+        source: "../../assets/img/ButtonBG.png"
+        width: 70
+        height:70
+        x:225
+        y:70
+        Text {
+            font.family: gameFont.name
+            font.pixelSize: 13
+            color: "red"
+            text: "Demo 3"
+            anchors.centerIn: parent
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: startClicked3()
         }
     }
 
