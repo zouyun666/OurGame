@@ -14,6 +14,7 @@ EntityBase {
     property int column
 
     signal clicked(int row, int column, int type)
+    signal fallDownFinished(var block) //fall完成
 
     Image {
       anchors.fill: parent
@@ -55,10 +56,23 @@ EntityBase {
         }
     }
 
+    // 在移除之前淡出块
+    NumberAnimation {
+      id: fadeInAnimation
+      target: block
+      property: "opacity"
+      duration: 1000
+      from: 0
+      to: 1
+    }
+
     NumberAnimation {
         id:fallDownAnimation
         target: block
         property: "y"
+        onStopped: {
+          fallDownFinished(block)
+        }
     }
 
     //使用Timer并将淡出持续时间设置为其间隔。 在那段时间过去之后，我们将开始运动。
@@ -72,8 +86,30 @@ EntityBase {
         }
     }
 
+//    // particle effect，粒子效应
+//    Item {
+//      id: particleItem
+//      width: parent.width
+//      height: parent.height
+//      x: parent.width/2
+//      y: parent.height/2
+
+//      //粒子元素总是由粒子系统在内部管理，不能在QML中创建。 然而，有时它们通过信号暴露，以允许任意改变粒子状态
+//      Particle {
+//        id: sparkleParticle
+//        fileName: "../particles/FruitySparkle.json"
+//      }
+//      opacity: 0
+//      visible: opacity > 0
+//      enabled: opacity > 0
+//    }
+
+
+
   //remove-function淡出块并在动画结束时从游戏中移除实体。
     function remove() {
+//        particleItem.opacity = 1
+//        sparkleParticle.start()
          fadeOutAnimation.start()
     }
 //fallDown函数等待一段时间，直到网格中的其他块的移除完成，然后将块向下移动一定距离。

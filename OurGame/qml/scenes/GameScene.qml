@@ -1,5 +1,6 @@
 import Felgo 3.0
 import QtQuick 2.0
+import GameDataType 1.0
 import "../game"
 import "../ui"
 
@@ -13,6 +14,8 @@ SceneBase {
   // property to hold game score
   property int score
 
+  property  int  clicks:0
+
   // property to 保持多汁米百分比
   property double juicyMeterPercentage
 
@@ -23,17 +26,18 @@ SceneBase {
   property alias overlayText: overlays
   property alias gameSound: gameSoundItem
 
-  // 记住vplay msgbox是否打开
-  property bool vPlayMsgBox: false
-
   // signal for opening highscore
-  signal highscoreClicked()
+  signal continueClicked()
 
   // signal for reporting highscore
   signal reportScore(int score)
 
   //对本机后退按钮做出反应
-//  onBackButtonPressed: backPressed()
+  onBackButtonPressed: backPressed()
+
+  GameData{
+      id:gameData
+  }
 
   // 添加实体管理器
   EntityManager {
@@ -137,9 +141,16 @@ SceneBase {
 //在新游戏初始化完成后显示游戏区域
     onInitFinished: {
       whiteScreen.stopLoading()
-      scene.score = 0
-      scene.juicyMeterPercentage = 0
-      scene.remainingTime = 120 // 120 seconds
+        if(scene.clicks===1){
+            scene.score = gameData.score
+            scene.remainingTime = gameData.remainedTime
+            scene.clicks =0
+        }
+        else{
+           scene.score = 0
+            scene.remainingTime = 120
+        }
+ // 120 seconds
       filledGrid.opacity = 0
       gameTimer.start()
     }
@@ -158,10 +169,19 @@ SceneBase {
 
       onInitFinished2: {
           whiteScreen.stopLoading()
-          scene.score = 0
+//          scene.score = 0;
+          if(scene.clicks===1){
+              scene.score = gameData.score
+              scene.remainingTime = gameData.remainedTime
+              scene.clicks =0
+          }
+          else{
+             scene.score = 0
+              scene.remainingTime = 120
+          }
           scene.juicyMeterPercentage = 0
-          scene.remainingTime = 120
           filledGrid.opacity = 0
+          gameTimer.start()
       }
       // 在标题画面上隐藏游戏区域
       opacity: filledGrid.opacity == 1 ? 0 : 1
@@ -177,11 +197,21 @@ SceneBase {
 
       onInitFinished3: {
           whiteScreen.stopLoading()
-          scene.score = 0
+//          scene.score = 0;
+          if(scene.clicks===1){
+              scene.score = gameData.score
+              scene.remainingTime = gameData.remainedTime
+              scene.clicks =0
+          }
+          else{
+             scene.score = 0
+              scene.remainingTime = 120
+          }
           scene.juicyMeterPercentage = 0
-          scene.remainingTime = 120
           filledGrid.opacity = 0
+          gameTimer.start()
       }
+
       // 在标题画面上隐藏游戏区域
       opacity: filledGrid.opacity == 1 ? 0 : 1
   }
@@ -254,8 +284,11 @@ SceneBase {
     repeat: true
     interval: 1000 // trigger every second
     onTriggered: {
-      if(scene.remainingTime > 0)
+      if(scene.remainingTime > 0){
         scene.remainingTime--
+        gameData.remainedTime =scene.remainingTime
+        gameData.save()
+      }
       else if(!gameArea.fieldLocked) {
         currentGameEnded()
       }
@@ -269,13 +302,16 @@ SceneBase {
     opacity: 1
     anchors.horizontalCenter: scene.horizontalCenter
     onStartMenu: scene.startJuicy()
-    onHighscoreClicked: scene.highscoreClicked()
-    onCreditsClicked: {
+    onContinueClicked: scene.continueClicked()
+    onResourcesClicked: {
       titleWindow.hide();
       creditsWindow.show()
     }
-  }
+   }
 
+    onContinueClicked: {
+        scene.clicks = titleWindow.continueclicks()
+    }
   DemoMenuWindow {
       id:demoMenuWindow
       opacity: 0
@@ -285,18 +321,25 @@ SceneBase {
           gameArea3.opacity=0
           gameArea.opacity=1
           scene.startGame()
+          gameData.demoCount = 1
+          gameData.save()
+
       }
       onStartClicked2: {
           gameArea.opacity=0
           gameArea3.opacity=0
           gameArea2.opacity=1
           scene.startGame2()
+          gameData.demoCount = 2
+          gameData.save()
       }
       onStartClicked3: {
           gameArea.opacity=0
           gameArea2.opacity=0
           gameArea3.opacity=1
           scene.startGame3()
+          gameData.demoCount = 3
+          gameData.save()
       }
   }
 
@@ -591,4 +634,5 @@ SceneBase {
       gameOverWindow.hide()
       demoMenuWindow.show()
   }
+
 }

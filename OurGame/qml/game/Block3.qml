@@ -55,6 +55,23 @@ entityManager.removeEntityById(block.entityId)
         }
     }
 
+//    Item {
+//      id: particleItem
+//      width: parent.width
+//      height: parent.height
+//      x: parent.width/2
+//      y: parent.height/2
+
+//      //粒子元素总是由粒子系统在内部管理，不能在QML中创建。 然而，有时它们通过信号暴露，以允许任意改变粒子状态
+//      Particle {
+//        id: sparkleParticle
+//        fileName: "../particles/FruitySparkle.json"
+//      }
+//      opacity: 0
+//      visible: opacity > 0
+//      enabled: opacity > 0
+//    }
+
     MouseArea{
         anchors.fill: parent
         onClicked: {

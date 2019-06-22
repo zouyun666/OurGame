@@ -1,5 +1,6 @@
 import Felgo 3.0
 import QtQuick 2.0
+import GameDataType 1.0
 import "scenes"
 
 GameWindow {
@@ -8,10 +9,19 @@ GameWindow {
   screenWidth: 640
   screenHeight: 960
 
+//  GameData{
+//      id:gameData
+//  }
+
   // custom font loading of ttf fonts
   FontLoader {
     id: gameFont
     source: "../assets/fonts/akaDylan Plain.ttf"
+  }
+
+  FontLoader{
+      id:gameFont1
+      source: "../assets/fonts/Flower Bold.ttf"
   }
 
   // loading screen,加载屏幕
@@ -26,13 +36,24 @@ GameWindow {
     enabled: opacity == 1 ? true : false
     visible: opacity > 0 ? true : false
 
+    gradient: Gradient {
+        GradientStop {
+            position: 0.00;
+            color: "#fed6e3";
+        }
+        GradientStop {
+            position: 1.00;
+            color: "#a8edea";
+        }
+    }
+
     // signal when load screen is fully visible
     signal fullyVisible()
 
     // background and text
     Text {
       // set font
-      font.family: gameFont.name
+      font.family: gameFont1.name
       font.pixelSize: gameWindow.width / 640 * 24
       color: "red"
       text: "Loading ..."

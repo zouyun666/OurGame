@@ -397,6 +397,8 @@ Item {
       var totalScore = score * comboFactor // combos increase score
       gameArea.comboScore += totalScore
       scene.score +=  totalScore
+      gameData.score=scene.score;
+      gameData.save();
     }
 
     if(clearAll) {

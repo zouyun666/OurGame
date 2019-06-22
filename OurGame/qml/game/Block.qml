@@ -152,7 +152,7 @@ EntityBase {
     }
   }
 
-  // 在移除之前淡出块
+  // 在移除之前淡出块//让动画看起来更加柔和
   NumberAnimation {
     id: fadeInAnimation
     target: block

@@ -103,9 +103,12 @@ Item {
           removeConnectedBlocks(fieldCopy)
           moveBlocksToButtom()
 
+          scene.gameSound.playFruitClear()
+
           var score = blockCount * (blockCount + 1) / 2
           scene.score += score
-
+          gameData.score=scene.score;
+          gameData.save();
           if(isGameOver())
               gameOver()
 

@@ -12,12 +12,12 @@ Item {
 
   // disable when opacity < 1
   enabled: opacity == 1
-
+  property int continueclick :0
   // signal when buttons are clicked
 //  signal startClicked()
   signal startMenu()
-  signal highscoreClicked()
-  signal creditsClicked()
+  signal continueClicked()
+  signal resourcesClicked()
 //  signal vplayClicked()
 
   Image {
@@ -29,10 +29,10 @@ Item {
   Text {
     id: playButton
     // set font
-    font.family: gameFont.name
+    font.family: gameFont1.name
     font.pixelSize: 20
     color: "red"
-    text: "play!"
+    text: "play"
 
     // set position
     anchors.horizontalCenter: parent.horizontalCenter
@@ -42,7 +42,10 @@ Item {
     // signal click event
     MouseArea {
       anchors.fill: parent
-      onClicked: startMenu()
+      onClicked: {
+          startMenu()
+          titleWindow.continueclick= 0
+      }
     }
 
     // 此动画序列无限地更改红色和橙色之间的文本颜色
@@ -59,28 +62,56 @@ Item {
     }
   }
 
+
   // highscore score button
   JuicyButton {
-    id: highscoreButton
-    text: "show highscore"
+    id: continueButton
+    text: "continue game"
 
     // set position
     anchors.horizontalCenter: parent.horizontalCenter
-    anchors.top: parent.bottom
+    anchors.top:parent.bottom
     anchors.topMargin: -10
 
-    onClicked: highscoreClicked()
+    onClicked: {
+        continueClicked()
+        gameData.load();
+        if(gameData.demoCount == 1){
+            gameArea2.opacity=0
+            gameArea3.opacity=0
+            gameArea.opacity=1
+            scene.startGame()
+            scene.score = gameData.score
+
+        }
+        if(gameData.demoCount == 2){
+            gameArea.opacity=0
+            gameArea3.opacity=0
+            gameArea2.opacity=1
+            scene.startGame2()
+            scene.score = gameData.score
+
+        }
+        if(gameData.demoCount == 3){
+            gameArea2.opacity=0
+            gameArea.opacity=0
+            gameArea3.opacity=1
+            scene.startGame3()
+            scene.score = gameData.score
+
+        }
+    }
   }
 
   // credits button
   JuicyButton {
-    text: "credits"
+    text: "resources"
 
     // set position
     anchors.horizontalCenter: parent.horizontalCenter
-    anchors.top: highscoreButton.bottom
+    anchors.top: continueButton.bottom
     anchors.topMargin: 0
-    onClicked: creditsClicked()
+    onClicked: resourcesClicked()
   }
 
   // fade in/out animation
@@ -97,5 +128,9 @@ Item {
   // hides the window
   function hide() {
     titleWindow.opacity = 0
+  }
+
+  function continueclicks (){
+      return 1
   }
 }

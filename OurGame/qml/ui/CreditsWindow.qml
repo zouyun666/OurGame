@@ -34,18 +34,6 @@ Item {
     onClicked: backClicked()
   }
 
-  // click area for vplay logo
-  MouseArea {
-    // set area to cover Felgo ad
-    width: parent.width - 70
-    height: 40
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.bottom: parent.bottom
-    anchors.bottomMargin: 18
-
-    onClicked: vplayClicked()
-  }
-
   // fade in/out animation
   Behavior on opacity {
     NumberAnimation { duration: 400 }

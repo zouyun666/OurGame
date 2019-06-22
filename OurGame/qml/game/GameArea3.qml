@@ -2,13 +2,13 @@ import QtQuick 2.0
 
 Item {
 
-    id: gameArea
+    id: gameArea3
 
     width: blockSize * 8
     height: blockSize * 12
     // 隐藏和禁用不透明度
-    visible: gameArea.opacity > 0
-    enabled: gameArea.opacity == 1
+    visible: gameArea3.opacity > 0
+    enabled: gameArea3.opacity == 1
     property double blockSize
     property int rows: Math.floor(height/blockSize)
     property int columns: Math.floor(width/blockSize)
@@ -27,15 +27,15 @@ Item {
 
     function initializeField(){
 
-        gameArea.clicks=0
-        gameArea.maxTypes=8
+        gameArea3.clicks=0
+        gameArea3.maxTypes=8
 
         clearField()
 
         for(var i=0; i<rows; i++){
             for(var j=0; j<columns; j++){
 //                if(j>2&&i>2||j<2&&i<5){
-                    gameArea.field[index(i, j)] = createBlock(i, j)
+                    gameArea3.field[index(i, j)] = createBlock(i, j)
 //                }else{
 //                    gameArea.field[index(i,j)]=null
 //                    console.log(field[index(i,j)])
@@ -47,13 +47,13 @@ Item {
     }
 
     function clearField(){
-        for(var i=0; i<gameArea.field.length;i++){
-            var block = gameArea.field[i]
+        for(var i=0; i<gameArea3.field.length;i++){
+            var block = gameArea3.field[i]
             if(block !== null){
                 entityManager3.removeEntityById(block.entityId)
             }
         }
-        gameArea.field = []
+        gameArea3.field = []
     }
 
     function createBlock(row, column){
@@ -62,7 +62,7 @@ Item {
             height: blockSize,
             x: column * blockSize,
             y: row * blockSize,
-            type: Math.floor(Math.random()*gameArea.maxTypes),//只有5种水果
+            type: Math.floor(Math.random()*gameArea3.maxTypes),//只有5种水果
             row: row,
             column: column,
             selected: 0
@@ -81,23 +81,24 @@ Item {
 //    var block2;
     function handleClick(row, column, type)
     {
-        gameArea.clicks++;
+        gameArea3.clicks++;
         console.log("handleClick")
         var blockA;
         var blockB;
         var fieldCopy=field.slice()
-        console.log(gameArea.clicks)
-        if(gameArea.clicks%2 !== 0){
+        console.log(gameArea3.clicks)
+        if(gameArea3.clicks%2 !== 0){
             blockA=field[index(row,column)];
 //            fieldCopy[index(row,column)]=null
 //            console.log(field[index(row, column)]);
             console.log("ROW:"+blockA.row)
             console.log("COLUMN:"+blockA.column)
             field1[0]=blockA
+            scene.gameSound.playMoveBlock()
 //            entityManager.removeEntityById(blockA.entityId)
         }
 
-        if(gameArea.clicks%2===0){
+        if(gameArea3.clicks%2===0){
             blockB=field[index(row,column)];
 //            fieldCopy[index(row,column)]=null
 //            console.log(field[index(row, column)]);
@@ -105,13 +106,16 @@ Item {
             console.log("COLUMN:"+blockB.column)
             field1[1]=blockB
 
-                if(blockB.type===field1[0].type && matchBlockTow(blockB)){
+                if(blockB.type===field1[0].type && matchBlockOne(blockB)){
                     entityManager3.removeEntityById(blockB.entityId)
                     entityManager3.removeEntityById(field1[0].entityId)
                     field[index(field1[0].row, field1[0].column)]=null
                     field[index(field1[1].row, field1[1].column)]=null
                     var score=(clicks+1)/2*4
                     scene.score+=score
+                    gameData.score=scene.score;
+                    gameData.save();
+                    scene.gameSound.playFruitClear()
                 }
 //            }
         }
@@ -149,9 +153,9 @@ Item {
 
     function matchBlockOne(blockB)
     {
-//        if(blockB.row===field1[0].row||blockB.column===field1[0].column)
-//            return matchBlock(blockB)
-        var pt1 = gameArea.field[index(field1[1].row,field1[0].column)];
+        if(blockB.row===field1[0].row||blockB.column===field1[0].column)
+            return matchBlock(blockB)
+        var pt1 = gameArea3.field[index(field1[1].row,field1[0].column)];
         console.log(field1[1].row)
         console.log(field1[0].column)
         console.log(field[index(field1[1].row,field1[0].column)])
@@ -169,7 +173,7 @@ Item {
             }
         }
 
-        pt1 = gameArea.field[index(field1[0].row, field1[1].column)];
+        pt1 = gameArea3.field[index(field1[0].row, field1[1].column)];
         if(pt1===null){
             console.log("pt1 scenond")
             if(
@@ -206,77 +210,77 @@ Item {
 
     }
 
-    function matchBlockTow(blockB){
+//    function matchBlockTow(blockB){
 
-        console.log("enter matchBlockTow")
+//        console.log("enter matchBlockTow")
 
-//        for(var i=field1[0]+1;)
-        if(blockB.row===field1[0].row||blockB.column===field1[0].column)
-            return matchBlock(blockB)
+////        for(var i=field1[0]+1;)
+//        if(blockB.row===field1[0].row||blockB.column===field1[0].column)
+//            return matchBlock(blockB)
 
-        //向右搜索
-        var right=1;
-        var blockright = field[index(field1[0].row, field1[0].column+right)]
+//        //向右搜索
+//        var right=1;
+//        var blockright = field[index(field1[0].row, field1[0].column+right)]
 
-        console.log(blockright)
+//        console.log(blockright)
 
-        while(blockright===null){
-//            console.log(blockC)
-            if(matchBlockOne(blockright)){
-                return true
-            }
-            right++;
-            blockright=field[index(field1[0].row, field1[0].column+right)]
-        }
-        console.log("NO WHILE")
+//        while(blockright===null){
+////            console.log(blockC)
+//            if(matchBlockOne(blockright)){
+//                return true
+//            }
+//            right++;
+//            blockright=field[index(field1[0].row, field1[0].column+right)]
+//        }
+//        console.log("NO WHILE")
 
-        //向左搜索
-        var left=1
-        var blockleft = field[index(field1[0].row, field1[0].column-left)]
-        while(blockleft===null){
-            if(matchBlockOne(blockleft)){
-                return true
-            }
-            left++;
-            blockleft = field[index(field1[0].row, field1[0].column-left)]
-        }
+//        //向左搜索
+//        var left=1
+//        var blockleft = field[index(field1[0].row, field1[0].column-left)]
+//        while(blockleft===null){
+//            if(matchBlockOne(blockleft)){
+//                return true
+//            }
+//            left++;
+//            blockleft = field[index(field1[0].row, field1[0].column-left)]
+//        }
 
-        //向上搜索
-        var up=1
-        var blockup=field[index(field1[0].row-up, field1[0].column)]
-        while(blockup===null){
-            if(matchBlockOne(blockup)){
-                return true
-            }
-            up++
-            blockup = field[index(field1[0].row-up, field1[0].column)]
-        }
+//        //向上搜索
+//        var up=1
+//        var blockup=field[index(field1[0].row-up, field1[0].column)]
+//        while(blockup===null){
+//            if(matchBlockOne(blockup)){
+//                return true
+//            }
+//            up++
+//            blockup = field[index(field1[0].row-up, field1[0].column)]
+//        }
 
-        //向下搜索
-        var down=1
-        var blockdown=field[index(field1[0].row+down, field1[0].column)]
-        while(blockdown===null){
-            if(matchBlockOne(blockdown)){
-                return true
-            }
-            down++;
-            blockdown=field[index(field1[0].row+down, field1[0].column)]
-        }
+//        //向下搜索
+//        var down=1
+//        var blockdown=field[index(field1[0].row+down, field1[0].column)]
+//        while(blockdown===null){
+//            if(matchBlockOne(blockdown)){
+//                return true
+//            }
+//            down++;
+//            blockdown=field[index(field1[0].row+down, field1[0].column)]
+//        }
 
-    }
-    function matchBlockOne1(blockrlud)
-    {
-        var blockm=field[index(field1[i].row,blockrlud.column)]
-        if(blockm===null){
-            if(
-            matchBlockC(field1[i].row,blockrlud.column,blockrlud.row, blockrlud.column)&&
-            matchBlockC(field1[i].row,blockrlud.column,field1[1].row, field1[1].column)){
-                return true
-            }
-        }
-        }
+//    }
+//    function matchBlockOne1(blockrlud)
+//    {
+//        var blockm=field[index(field1[i].row,blockrlud.column)]
+//        if(blockm===null){
+//            if(
+//            matchBlockC(field1[i].row,blockrlud.column,blockrlud.row, blockrlud.column)&&
+//            matchBlockC(field1[i].row,blockrlud.column,field1[1].row, field1[1].column)){
+//                return true
+//            }
+//        }
+//        }
 
-    }
+}
 
 
 
