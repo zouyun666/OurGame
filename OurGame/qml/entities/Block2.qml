@@ -86,43 +86,15 @@ EntityBase {
         }
     }
 
-//    // particle effect，粒子效应
-//    Item {
-//      id: particleItem
-//      width: parent.width
-//      height: parent.height
-//      x: parent.width/2
-//      y: parent.height/2
-
-//      //粒子元素总是由粒子系统在内部管理，不能在QML中创建。 然而，有时它们通过信号暴露，以允许任意改变粒子状态
-//      Particle {
-//        id: sparkleParticle
-//        fileName: "../particles/FruitySparkle.json"
-//      }
-//      opacity: 0
-//      visible: opacity > 0
-//      enabled: opacity > 0
-//    }
-
-
-
   //remove-function淡出块并在动画结束时从游戏中移除实体。
     function remove() {
-//        particleItem.opacity = 1
-//        sparkleParticle.start()
          fadeOutAnimation.start()
     }
 //fallDown函数等待一段时间，直到网格中的其他块的移除完成，然后将块向下移动一定距离。
     function fallDown(distance) {
-    // complete previous fall before starting a new one
         fallDownAnimation.complete()
-
-        // move with 100 ms per block
-        // e.g. moving down 2 blocks takes 200 ms
         fallDownAnimation.duration = 100 *distance
         fallDownAnimation.to=block.y+distance*block.height
-
-        // wait for removal of other blocks before falling down
         fallDownTimer.start()
     }
 }

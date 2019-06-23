@@ -14,14 +14,14 @@ class GameData : public QObject
 public:
     GameData();
 
-    int demoCount() const;
+    int demoCount()const;
     void setDemoCount(const int count);
 
-    int score() const;
+    int score()const;
     void setScore(const int score);
 
-    int remainedTime() const;
-    void setRemainedTime (const int remainedTime);
+    int remainedTime()const;
+    void setRemainedTime(const int remainedTime);
 
     void read(const QJsonObject &json);
     void write(QJsonObject &json);

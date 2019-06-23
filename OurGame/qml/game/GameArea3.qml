@@ -6,7 +6,6 @@ Item {
 
     width: blockSize * 8
     height: blockSize * 12
-    // 隐藏和禁用不透明度
     visible: gameArea3.opacity > 0
     enabled: gameArea3.opacity == 1
     property double blockSize
@@ -14,7 +13,7 @@ Item {
     property int columns: Math.floor(width/blockSize)
     property var field:[]
     property int maxTypes
-    property int clicks
+    property int clicks//总的点击次数
     property bool isSelected: false
 
     property var field1:[]
@@ -34,12 +33,7 @@ Item {
 
         for(var i=0; i<rows; i++){
             for(var j=0; j<columns; j++){
-//                if(j>2&&i>2||j<2&&i<5){
-                    gameArea3.field[index(i, j)] = createBlock(i, j)
-//                }else{
-//                    gameArea.field[index(i,j)]=null
-//                    console.log(field[index(i,j)])
-//                }
+                gameArea3.field[index(i, j)] = createBlock(i, j)
             }
         }
 
@@ -67,18 +61,14 @@ Item {
             column: column,
             selected: 0
         }
-        var id = entityManager3.createEntityFromUrlWithProperties(Qt.resolvedUrl("Block3.qml"), entityProperties)
+        var id = entityManager3.createEntityFromUrlWithProperties(Qt.resolvedUrl("../entities/Block3.qml"), entityProperties)
 
         var entity = entityManager3.getEntityById(id)
-//        entity.selection.connect(changseleced)
         entity.clicked.connect(handleClick)
 
         return entity
     }
 
-
-//    var block1;
-//    var block2;
     function handleClick(row, column, type)
     {
         gameArea3.clicks++;
@@ -86,38 +76,27 @@ Item {
         var blockA;
         var blockB;
         var fieldCopy=field.slice()
-        console.log(gameArea3.clicks)
         if(gameArea3.clicks%2 !== 0){
             blockA=field[index(row,column)];
-//            fieldCopy[index(row,column)]=null
-//            console.log(field[index(row, column)]);
-            console.log("ROW:"+blockA.row)
-            console.log("COLUMN:"+blockA.column)
             field1[0]=blockA
             scene.gameSound.playMoveBlock()
-//            entityManager.removeEntityById(blockA.entityId)
         }
-
         if(gameArea3.clicks%2===0){
             blockB=field[index(row,column)];
-//            fieldCopy[index(row,column)]=null
-//            console.log(field[index(row, column)]);
-            console.log("ROW:"+blockB.row)
-            console.log("COLUMN:"+blockB.column)
             field1[1]=blockB
-
                 if(blockB.type===field1[0].type && matchBlockOne(blockB)){
-                    entityManager3.removeEntityById(blockB.entityId)
-                    entityManager3.removeEntityById(field1[0].entityId)
-                    field[index(field1[0].row, field1[0].column)]=null
-                    field[index(field1[1].row, field1[1].column)]=null
-                    var score=(clicks+1)/2*4
-                    scene.score+=score
-                    gameData.score=scene.score;
-                    gameData.save();
-                    scene.gameSound.playFruitClear()
+                    if(field1[0].row !== field1[1].row || field1[0].column !== blockB.column){
+                        entityManager3.removeEntityById(blockB.entityId)
+                        entityManager3.removeEntityById(field1[0].entityId)
+                        field[index(field1[0].row, field1[0].column)]=null
+                        field[index(field1[1].row, field1[1].column)]=null
+                        var score=(clicks+1)/2*4
+                        scene.score+=score
+                        gameData.score=scene.score;
+                        gameData.save();
+                        scene.gameSound.playFruitClear()
+                    }
                 }
-//            }
         }
 
     }
@@ -156,13 +135,6 @@ Item {
         if(blockB.row===field1[0].row||blockB.column===field1[0].column)
             return matchBlock(blockB)
         var pt1 = gameArea3.field[index(field1[1].row,field1[0].column)];
-        console.log(field1[1].row)
-        console.log(field1[0].column)
-        console.log(field[index(field1[1].row,field1[0].column)])
-        console.log(pt1)
-        console.log("-------------------------------------")
-        console.log("Crow:"+field1[1].row+ "             Ccolumn:"+field1[0].column)
-        console.log("Crow:"+field1[0].row+ "             Ccolumn:"+field1[1].column)
 
         if(pt1===null){
             console.log("pt1 first")
@@ -209,6 +181,7 @@ Item {
         return true
 
     }
+}
 
 //    function matchBlockTow(blockB){
 
@@ -280,7 +253,6 @@ Item {
 //        }
 //        }
 
-}
 
 
 

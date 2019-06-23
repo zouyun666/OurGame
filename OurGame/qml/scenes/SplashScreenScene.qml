@@ -1,25 +1,23 @@
-import Felgo 3.0
 import QtQuick 2.0
-import "../game"
+import Felgo 3.0
+import "../entities"
 import "../ui"
 
-SceneBase {
-  id: scene
+SceneBase{
+    id: scene
 
-  // the "logical size" - the scene content is auto-scaled to match the GameWindow size
-  width: 320
-  height: 480
+    width: 320
+    height: 480
 
-  // signal splash screen finished
-  signal splashScreenFinished()
+    signal splashScreenFinished()//splsh加载完成之后发送这个信号
 
-  // show splashscreen
-  SplashScreen {
-    id: splashScreen
-    anchors.fill: parent.gameWindowAnchorItem
-    anchors.centerIn: parent.gameWindowAnchorItem
+    //show splashscreen
+    SplashScreen{
+        id: splashScreen
+        anchors.fill: parent.gameWindowAnchorItem
+        anchors.centerIn: parent.gameWindowAnchorItem
 
-    onSplashScreenFinished: scene.splashScreenFinished()
-    //这个是SplashScreen的splashScreenFinished()信号处理器，处理的是发送上面的splashScreenFinished()信号
-  }
+        onSplashScreenFinished:scene.splashScreenFinished()//这个是SplashScreen的splashScreenFinished()信号处理器，处理的是发送上面的splashScreenFinished()信号
+
+    }
 }

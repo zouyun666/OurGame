@@ -11,15 +11,13 @@ Item {
   // 叠加最初是隐藏的
   opacity: 0
 
-  // 可以为每个覆盖设置图像源
-  property alias imageSource: image.source
+  property alias imageSource: image.source      //// 可以为每个覆盖设置图像源
 
   property int animationDuration: 500
 
   property int defaultY: 0
 
-  // 信号动画结束了
-  signal overlayDisappeared()
+  signal overlayDisappeared()     // 信号动画结束了
 
   Image {
     id: image
@@ -65,7 +63,6 @@ Item {
       overlayDisappeared()
     }
   }
-
 
   // trigger animation
   function show() {

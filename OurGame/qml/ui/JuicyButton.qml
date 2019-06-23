@@ -9,29 +9,26 @@ Item {
 
   property string text
 
-  // signal when buttons are clicked
+  // 点击信号
   signal clicked()
 
-  // background
+  // 背景图片
   Image {
     source: "../../assets/img/ButtonBG.png"
     anchors.fill: parent
   }
 
-  // text
+  // 设置文本
   Text {
-    // set font
     font.family: gameFont.name
     font.pixelSize: 12
     color: "red"
     text: button.text
 
-    // set position
     anchors.horizontalCenter: parent.horizontalCenter
     y: 15
   }
 
-  // signal click event
   MouseArea {
     anchors.fill: parent
     onClicked: button.clicked()

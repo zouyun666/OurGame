@@ -83,10 +83,10 @@ Item {
 
     // add block to game area
     var id = entityManager2.createEntityFromUrlWithProperties(
-          Qt.resolvedUrl("Block2.qml"), entityProperties)
+          Qt.resolvedUrl("../entities/Block2.qml"), entityProperties)
 
     // link click signal from block to handler function
-    var entity = entityManager2.getEntityById(id)
+    var entity = entityManager2.getEntityById(id);
     entity.clicked.connect(handleClick)
 
     return entity
@@ -107,8 +107,9 @@ Item {
 
           var score = blockCount * (blockCount + 1) / 2
           scene.score += score
-          gameData.score=scene.score;
-          gameData.save();
+          gameData.score = scene.score
+          gameData.save()
+
           if(isGameOver())
               gameOver()
 

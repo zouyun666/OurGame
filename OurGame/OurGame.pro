@@ -1,7 +1,6 @@
 # allows to add DEPLOYMENTFOLDERS and links to the Felgo library and QtCreator auto-completion
 CONFIG += felgo
 CONFIG += c++11
-
 # uncomment this line to add the Live Client Module and use live reloading with your custom C++ code
 # for the remaining steps to build a custom Live Code Reload app see here: https://felgo.com/custom-code-reload-app/
 # CONFIG += felgo-live
@@ -60,6 +59,27 @@ win32 {
 macx {
     ICON = macx/app_icon.icns
 }
+
+DISTFILES += \
+    qml/scenes/SplashScreenScene.qml \
+    qml/scenes/SceneBase.qml \
+    qml/ui/SplashScreen.qml \
+    qml/scenes/GameScene.qml \
+    qml/game/GameSound.qml \
+    qml/game/JuicyMeter.qml \
+    qml/game/GameArea1.qml \
+    qml/game/GameArea2.qml \
+    qml/game/GameArea3.qml \
+    qml/entities/Block1.qml \
+    qml/entities/Block2.qml \
+    qml/entities/Block3.qml \
+    qml/ui/TitleWindow.qml \
+    qml/ui/DemoMenuWindow.qml \
+    qml/ui/JuicyButton.qml \
+    qml/ui/Overlays.qml \
+    qml/ui/TextOverlay.qml \
+    qml/ui/GameOverWindow.qml \
+    qml/ui/ResourceWindow.qml
 
 HEADERS += \
     gamedata.h

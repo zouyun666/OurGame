@@ -11,10 +11,8 @@ Item {
 
   property string textsImgPath: "../../assets/img/texts/"
 
-  // signal when overloadText disappeared
-  signal overloadTextDisappeared()
+  signal overloadTextDisappeared()  //overloadText消失时发送此信号
 
-  // configure overlays
   TextOverlay {
     id: fruityText
     anchors.horizontalCenter: parent.horizontalCenter

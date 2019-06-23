@@ -1,9 +1,7 @@
 #include <QApplication>
 #include <FelgoApplication>
-#include "gamedata.h"
-
 #include <QQmlApplicationEngine>
-
+#include "gamedata.h"
 
 int main(int argc, char *argv[])
 {

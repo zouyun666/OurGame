@@ -2,8 +2,6 @@ import QtQuick 2.0
 
 Item {
     id:demoMenu
-//    width: 640
-//    height: 960
 
     visible: opacity>0
     enabled: opacity==1
@@ -22,7 +20,6 @@ Item {
         y:6
         source: "../../assets/img/ButtonBG.png"
         anchors.horizontalCenter: parent.horizontalCenter
-//        anchors.fill: parent
         width: 140
         height:55
         Text {

@@ -1,7 +1,7 @@
 {
-    "title": "Juicy Squash",
+    "title": "OurGame",
     "identifier": "com.yourcompany.wizardEVP.OurGame",
-    "orientation": "portrait",
+    "orientation": "landscape",
     "versioncode": 1,
     "versionname": "1.0.0",
     "stage": "test"
