@@ -71,7 +71,7 @@ Item {
             gameArea2.opacity=0
             gameArea3.opacity=0
             gameArea1.opacity=1
-            scene.startGame()
+            scene.startGame1()
             scene.score = gameData.score
 
         }
