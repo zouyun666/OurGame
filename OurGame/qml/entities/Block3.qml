@@ -13,11 +13,8 @@ EntityBase{
 
     property int sumclicks: 0//记录点击次数
 
-//    property bool isSelected: false
     signal clicked(int row, int column, int type)
     signal selection()
-
-
 
     Image{
         anchors.fill: parent
@@ -55,36 +52,45 @@ entityManager.removeEntityById(block.entityId)
         }
     }
 
-//    Item {
-//      id: particleItem
-//      width: parent.width
-//      height: parent.height
-//      x: parent.width/2
-//      y: parent.height/2
+    Rectangle {
+      id: highlightRect
+      color: "white"
+      anchors.fill: parent
+      anchors.centerIn: parent
+      opacity: 0
+      z: 1
+    }
 
-//      //粒子元素总是由粒子系统在内部管理，不能在QML中创建。 然而，有时它们通过信号暴露，以允许任意改变粒子状态
-//      Particle {
-//        id: sparkleParticle
-//        fileName: "../particles/FruitySparkle.json"
-//      }
-//      opacity: 0
-//      visible: opacity > 0
-//      enabled: opacity > 0
-//    }
+    SequentialAnimation {
+      id: highlightAnimation
+      loops: Animation.Infinite
+      NumberAnimation {
+        target: highlightRect
+        property: "opacity"
+        duration: 750
+        from: 0
+        to: 0.35
+      }
+      NumberAnimation {
+        target: highlightRect
+        property: "opacity"
+        duration: 750
+        from: 0.35
+        to: 0
+      }
+    }
 
     MouseArea{
         anchors.fill: parent
         onClicked: {
-            console.log("CLicked")
-//            isSelected=true
-//            console.log(isSelected)
+
+            highlightRect.opacity =1
+            highlightAnimation.start()
 
             sumclicks++
-//            console.log(sumclicks)
-
             parent.clicked(row, column, type)
-//            parent.selection(row, column, type, sumclicks);
-//            block.remove()
+
+        }
     }
-}
+    onSelection:highlightAnimation.stop()
 }

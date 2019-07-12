@@ -22,8 +22,6 @@ Item {
   enabled: gameArea2.opacity == 1
 
 
-//  property bool fieldLocked
-
   signal initFinished2()
   // game over signal,传递游戏结束的信息。
   signal gameOver()

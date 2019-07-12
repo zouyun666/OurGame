@@ -60,5 +60,26 @@ macx {
     ICON = macx/app_icon.icns
 }
 
+DISTFILES += \
+    qml/scenes/SplashScreenScene.qml \
+    qml/scenes/SceneBase.qml \
+    qml/ui/SplashScreen.qml \
+    qml/scenes/GameScene.qml \
+    qml/game/GameSound.qml \
+    qml/game/JuicyMeter.qml \
+    qml/game/GameArea1.qml \
+    qml/game/GameArea2.qml \
+    qml/game/GameArea3.qml \
+    qml/entities/Block1.qml \
+    qml/entities/Block2.qml \
+    qml/entities/Block3.qml \
+    qml/ui/TitleWindow.qml \
+    qml/ui/DemoMenuWindow.qml \
+    qml/ui/JuicyButton.qml \
+    qml/ui/Overlays.qml \
+    qml/ui/TextOverlay.qml \
+    qml/ui/GameOverWindow.qml \
+    qml/ui/ResourceWindow.qml
+
 HEADERS += \
     gamedata.h

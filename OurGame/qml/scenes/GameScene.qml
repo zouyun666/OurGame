@@ -157,7 +157,7 @@ SceneBase{
                }
                else{
                   scene.score = 0
-                   scene.remainingTime = 120
+                  scene.remainingTime = 120
                }
                scene.juicyMeterPercentage = 0
                filledGrid.opacity = 0
@@ -537,6 +537,8 @@ SceneBase{
           gameArea2.opacity=0
           gameArea3.opacity=0
           scene.juicyMeterPercentage = 0
+
+          gameTimer.stop()
 
           filledGrid.opacity =1
           juicyLogo.opacity=1

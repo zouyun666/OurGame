@@ -58,7 +58,7 @@ EntityBase {
     property bool waitForRelease
     property var dragStart
 
-    // start drag on press
+    // 按下开始拖动
     onPressed: {
       if(!dragging && !waitForRelease) {
         dragging = true
@@ -172,7 +172,7 @@ EntityBase {
     }
   }
 
-  // 计时器等待跌倒，直到其他块淡出
+  // 计时器等待fall，直到其他块淡出
   Timer {
     id: fallDownTimer
     interval: fadeOutAnimation.duration //设置触发器之间的间隔，以毫秒为单位。默认时间间隔为1000毫秒。
